@@ -87,7 +87,7 @@ namespace Usenet.Util
         /// Returns the hash code for this instance.
         /// </summary>
         /// <returns>A 32-bit signed integer hash code.</returns>
-        public override int GetHashCode() => HashCode.Start.Hash(this);
+        public override int GetHashCode() => HashCode.Combine(this);
 
         /// <summary>
         /// Returns a value indicating whether this instance is equal to the specified <see cref="MultiValueDictionary{TKey,TValue}"/> value.

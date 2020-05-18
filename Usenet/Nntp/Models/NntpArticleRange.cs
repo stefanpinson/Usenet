@@ -67,7 +67,7 @@ namespace Usenet.Nntp.Models
         /// Returns the hash code for this instance.
         /// </summary>
         /// <returns>A 32-bit signed integer hash code.</returns>
-        public override int GetHashCode() => HashCode.Start.Hash(From).Hash(To);
+        public override int GetHashCode() => System.HashCode.Combine(From, To);
 
         /// <summary>
         /// Returns a value indicating whether this instance is equal to the specified <see cref="NntpArticleRange"/> value.

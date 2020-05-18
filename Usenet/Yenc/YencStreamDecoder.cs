@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using Usenet.Extensions;
 using Usenet.Util;
@@ -45,7 +46,7 @@ namespace Usenet.Yenc
                 {
                     headers.Merge(YencMeta.GetPartHeaders(enumerator), false);
                 }
-                return new YencStream(YencMeta.ParseHeader(headers), EnumerateData(enumerator, encoding));
+                return new YencStream(YencMeta.ParseHeader(headers), EnumerateData(enumerator, encoding).ToList());
             }
         }
 

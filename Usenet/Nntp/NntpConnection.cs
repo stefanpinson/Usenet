@@ -18,7 +18,7 @@ namespace Usenet.Nntp
     /// </summary>
     /// <remarks>This implementation of the <see cref="INntpConnection"/> interface does support SSL encryption but
     /// does not support compressed multi-line results.</remarks>
-    public class NntpConnection : INntpConnection
+    public partial class NntpConnection : INntpConnection
     {
         private static readonly ILog log = LogProvider.For<NntpConnection>();
 
@@ -37,7 +37,7 @@ namespace Usenet.Nntp
             Stream = await GetStreamAsync(hostname, useSsl);
             writer = new StreamWriter(Stream, UsenetEncoding.Default) { AutoFlush = true };
             reader = new NntpStreamReader(Stream, UsenetEncoding.Default);
-            return GetResponse(parser);
+            return await GetResponseAsync(parser);
         }
 
         /// <inheritdoc/>
@@ -47,7 +47,7 @@ namespace Usenet.Nntp
             log.Info("Sending command: {Command}",command.StartsWith("AUTHINFO PASS", StringComparison.Ordinal) ? "AUTHINFO PASS [omitted]" : command);
             writer.WriteLine(command);
             return GetResponse(parser);
-        }
+        }        
 
         /// <inheritdoc/>
         public TResponse MultiLineCommand<TResponse>(string command, IMultiLineResponseParser<TResponse> parser) //, bool decompress = false)
@@ -60,7 +60,7 @@ namespace Usenet.Nntp
 
             return parser.Parse(response.Code, response.Message, dataBlock);
         }
-
+        
         /// <inheritdoc/>
         public TResponse GetResponse<TResponse>(IResponseParser<TResponse> parser)
         {

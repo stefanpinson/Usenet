@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using System.Text;
+using System.Threading.Tasks;
 using Usenet.Util;
 
 namespace Usenet.Nntp
@@ -37,6 +38,25 @@ namespace Usenet.Nntp
         public override string ReadLine()
         {
             string line = base.ReadLine();
+            if (line == null)
+            {
+                return null;
+            }
+            if (line.Length == 0 || line[0] != '.')
+            {
+                return line;
+            }
+            if (line.Length == 1)
+            {
+                return null;
+            }
+            return line[1] == '.' ? line.Substring(1) : line;
+        }
+
+        public override async Task<string> ReadLineAsync()
+        {
+            string line = await base.ReadLineAsync();
+            
             if (line == null)
             {
                 return null;

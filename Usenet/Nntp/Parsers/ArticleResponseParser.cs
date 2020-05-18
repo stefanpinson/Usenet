@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Usenet.Logging;
 using Usenet.Nntp.Builders;
 using Usenet.Nntp.Models;
@@ -17,7 +18,7 @@ namespace Usenet.Nntp.Parsers
         Article = 0x03
     }
 
-    internal class ArticleResponseParser : IMultiLineResponseParser<NntpArticleResponse>
+    internal class ArticleResponseParser : IMultiLineResponseParser<NntpArticleResponse>, IAsyncMultiLineResponseParser<NntpArticleResponse>
     {
         private static readonly ILog log = LogProvider.For<ArticleResponseParser>();
 
@@ -107,11 +108,13 @@ namespace Usenet.Nntp.Parsers
             while (enumerator.MoveNext())
             {
                 string line = enumerator.Current;
+
                 if (string.IsNullOrEmpty(line))
                 {
                     // no more headers (skip empty line)
                     break;
                 }
+
                 if (char.IsWhiteSpace(line[0]) && prevHeader != null)
                 {
                     prevHeader.Value += " " + line.Trim();
@@ -150,6 +153,65 @@ namespace Usenet.Nntp.Parsers
             {
                 yield return enumerator.Current;
             }
+        }
+
+        public async Task<NntpArticleResponse> ParseAsync(int code, string message, IAsyncEnumerable<string> dataBlock)
+        {
+            //return Parse(code, message, await dataBlock.ToListAsync());
+
+            if (!IsSuccessResponse(code))
+            {
+                return new NntpArticleResponse(code, message, false, null);
+            }
+
+            // get response line
+            string[] responseSplit = message.Split(' ');
+            if (responseSplit.Length < 2)
+            {
+                log.Error("Invalid response message: {Message} Expected: {{number}} {{messageid}}", message);
+            }
+
+            long.TryParse(responseSplit.Length > 0 ? responseSplit[0] : null, out long number);
+            string messageId = responseSplit.Length > 1 ? responseSplit[1] : string.Empty;
+
+            if (dataBlock == null)
+            {
+                // no headers and no body
+                return new NntpArticleResponse(code, message, true, new NntpArticle(number, messageId, null, null, null));
+            }
+
+            var bodyLines = new List<string>();
+
+            await foreach (var line in dataBlock)
+            {
+                // get headers if requested
+                var headers = MultiValueDictionary<string, string>.Empty;
+                //MultiValueDictionary<string, string> headers = (requestType & ArticleRequestType.Head) == ArticleRequestType.Head
+                //    ? GetHeaders(enumerator)
+                //    : MultiValueDictionary<string, string>.Empty;
+
+
+                //// get groups
+                NntpGroups groups = headers.TryGetValue(NntpHeaders.Newsgroups, out ICollection<string> values)
+                    ? new NntpGroupsBuilder().Add(values).Build()
+                    : null;
+
+                //// get body if requested
+                //IEnumerable<string> bodyLines = (requestType & ArticleRequestType.Body) == ArticleRequestType.Body
+                //    ? EnumerateBodyLines(enumerator)
+                //    : new string[0];
+
+                //if (dataBlock is ICollection<string>)
+                //{
+                //    // no need to keep enumerator if input is not a stream
+                //    // memoize the body lines
+                //    bodyLines = bodyLines.ToList();
+                //}
+                bodyLines.Add(line);
+            }
+            return new NntpArticleResponse(
+                code, message, true,
+                new NntpArticle(number, messageId, null, null, bodyLines));
         }
 
         private class Header

@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFramework>netstandard2.1</TargetFramework>
     <Authors>Harmen van Keimpema</Authors>
     <Company />
     <Description>A library for working with Usenet. It offers an NNTP client, an NZB file parser, builder, writer, a yEnc encoder and decoder. It is mainly focused on keeping memory usage low. Server responses can be enumerated as they come in. Binary messages will be encoded to yEnc format streaming and yEnc-encoded data will be decoded to binary data streaming.</Description>
@@ -13,11 +13,7 @@
     <Product>Usenet</Product>
   </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="GitVersionTask" Version="5.0.1">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
-    </PackageReference>
+  <ItemGroup>    
     <PackageReference Include="LibLog" Version="5.0.6">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
@@ -25,6 +21,7 @@
     <PackageReference Include="Microsoft.CSharp" Version="4.6.0" />
     <PackageReference Include="Microsoft.Extensions.FileProviders.Abstractions" Version="3.0.0" />
     <PackageReference Include="System.Collections.Immutable" Version="1.6.0" />
+    <PackageReference Include="System.Linq.Async" Version="4.1.1" />
     <PackageReference Include="System.Net.Security" Version="4.3.2" />
   </ItemGroup>
 

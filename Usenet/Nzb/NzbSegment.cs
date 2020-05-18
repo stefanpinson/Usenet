@@ -54,11 +54,11 @@ namespace Usenet.Nzb
         /// Returns the hash code for this instance.
         /// </summary>
         /// <returns>A 32-bit signed integer hash code.</returns>
-        public override int GetHashCode() => HashCode.Start
-            .Hash(Number)
-            .Hash(Offset)
-            .Hash(Size)
-            .Hash(MessageId);
+        public override int GetHashCode() => System.HashCode.Combine(
+            Number,
+            Offset,
+            Size,
+            MessageId);
 
         /// <summary>
         /// Returns a value indicating whether this instance is equal to the specified <see cref="NzbSegment"/> value.

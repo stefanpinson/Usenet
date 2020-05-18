@@ -81,10 +81,10 @@ namespace Usenet.Nntp.Models
         /// Returns the hash code for this instance.
         /// </summary>
         /// <returns>A 32-bit signed integer hash code.</returns>
-        public override int GetHashCode() => HashCode.Start
-            .Hash(Number)
-            .Hash(MessageId)
-            .Hash(Groups);
+        public override int GetHashCode() => System.HashCode.Combine(
+            Number,
+            MessageId,
+            Groups);
 
         /// <summary>
         /// Returns a value indicating whether this instance is equal to the specified <see cref="NntpArticle"/> value.

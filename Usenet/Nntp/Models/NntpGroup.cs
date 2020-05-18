@@ -98,13 +98,13 @@ namespace Usenet.Nntp.Models
         /// Returns the hash code for this instance.
         /// </summary>
         /// <returns>A 32-bit signed integer hash code.</returns>
-        public override int GetHashCode() => HashCode.Start
-            .Hash(Name)
-            .Hash(ArticleCount)
-            .Hash(LowWaterMark)
-            .Hash(HighWaterMark)
-            .Hash(PostingStatus)
-            .Hash(OtherGroup);
+        public override int GetHashCode() => HashCode.Combine(
+            Name,
+            ArticleCount,
+            LowWaterMark,
+            HighWaterMark,
+            PostingStatus,
+            OtherGroup);
 
         /// <summary>
         /// Returns a value indicating whether this instance is equal to the specified <see cref="NntpGroup"/> value.

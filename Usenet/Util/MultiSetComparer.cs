@@ -113,7 +113,7 @@ namespace Usenet.Util
         /// Returns the hash code for this instance.
         /// </summary>
         /// <returns>A 32-bit signed integer hash code.</returns>
-        public int GetHashCode(IEnumerable<T> enumerable) => HashCode.Start.Hash(enumerable);
+        public int GetHashCode(IEnumerable<T> enumerable) => System.HashCode.Combine(enumerable);
 
         /// <summary>
         /// A singleton instance of the <see cref="MultiSetComparer{T}"/> class that
