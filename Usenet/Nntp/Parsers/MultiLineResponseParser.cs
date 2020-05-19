@@ -4,7 +4,7 @@ using Usenet.Nntp.Responses;
 
 namespace Usenet.Nntp.Parsers
 {
-    internal class MultiLineResponseParser : IMultiLineResponseParser<NntpMultiLineResponse>
+    internal partial class MultiLineResponseParser : IMultiLineResponseParser<NntpMultiLineResponse>
     {
         private readonly int[] successCodes;
 

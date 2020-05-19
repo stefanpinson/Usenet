@@ -29,7 +29,13 @@ namespace Usenet.Nntp
             if (string.IsNullOrWhiteSpace(hostname))
                 throw new ArgumentNullException(nameof(hostname));
 
-            NntpResponse response = await connection.ConnectAsync(hostname, port, useSsl, new ResponseParser(200, 201));
+            NntpResponse response = await connection.ConnectAsync(
+                hostname, 
+                port, 
+                useSsl, 
+                new ResponseParser(200, 201));
+
+            
             return response.Success;
         }
 
@@ -46,7 +52,10 @@ namespace Usenet.Nntp
             if (string.IsNullOrWhiteSpace(username))
                 throw new ArgumentNullException(nameof(username));
 
-            NntpResponse userResponse = await connection.CommandAsync($"AUTHINFO USER {username}", new ResponseParser(281));
+            var userResponse = await connection.CommandAsync(
+                $"AUTHINFO USER {username}",
+                new ResponseParser(281));
+            
             if (userResponse.Success)
             {
                 return true;
@@ -55,7 +64,10 @@ namespace Usenet.Nntp
             {
                 return false;
             }
-            NntpResponse passResponse = await connection.CommandAsync($"AUTHINFO PASS {password}", new ResponseParser(281));
+            NntpResponse passResponse = await connection.CommandAsync(
+                $"AUTHINFO PASS {password}", 
+                new ResponseParser(281));
+
             return passResponse.Success;
         }
 
@@ -76,6 +88,5 @@ namespace Usenet.Nntp
                 $"ARTICLE {messageId}",
                 new ArticleResponseParser(ArticleRequestType.Article));
         }
-            
     }
 }

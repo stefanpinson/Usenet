@@ -12,22 +12,9 @@ namespace Usenet.Nntp
 {
     public partial class NntpConnection : IAsyncNntpConnection
     {
-        public async Task<TResponse> CommandAsync<TResponse>(string command, IResponseParser<TResponse> parser)
-        {
-            ThrowIfNotConnected();
-            await writer.WriteLineAsync(command);
-            return await GetResponseAsync(parser);
-        }
-
         public async Task<TResponse> MultiLineCommandAsync<TResponse>(string command, IAsyncMultiLineResponseParser<TResponse> parser)
         {
-            NntpResponse response = await CommandAsync(command, new ResponseParser());
-
-            var dataBlock = parser.IsSuccessResponse(response.Code)
-                ? ReadMultiLineDataBlockAsync()
-                : AsyncEnumerable.Empty<string>();
-
-            return await parser.ParseAsync(response.Code, response.Message, dataBlock);
+            throw new NotImplementedException();
         }
 
         public async Task<TResponse> GetResponseAsync<TResponse>(IResponseParser<TResponse> parser)
@@ -46,13 +33,14 @@ namespace Usenet.Nntp
             return parser.Parse(code, responseText.Substring(3).Trim());
         }
 
-        private async IAsyncEnumerable<string> ReadMultiLineDataBlockAsync()
+        public Task<TResponse> ConnectAsync<TResponse>(string hostname, int port, bool useSsl, IAsyncResponseParser<TResponse> parser)
         {
-            string line;
-            while ((line = reader.ReadLine()) != null)
-            {
-                yield return line;
-            }
+            throw new NotImplementedException();
+        }
+
+        public Task<TResponse> CommandAsync<TResponse>(string command, IAsyncResponseParser<TResponse> parser)
+        {
+            throw new NotImplementedException();
         }
     }
 }

@@ -3,7 +3,7 @@ using Usenet.Nntp.Responses;
 
 namespace Usenet.Nntp.Parsers
 {
-    internal class ResponseParser : IResponseParser<NntpResponse>
+    internal partial class ResponseParser : IResponseParser<NntpResponse>
     {
         private readonly int[] successCodes;
 
